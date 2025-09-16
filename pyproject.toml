@@ -1,0 +1,51 @@
+[project]
+name = "mcp-jenkins"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "jenkinsapi>=0.3.15",
+    "mcp[cli]>=1.12.2",
+    "pydantic>=2.11.7",
+    "python-dotenv>=1.1.1",
+    "python-jenkins>=1.8.3",
+    "requests>=2.32.5",
+]
+
+[dependency-groups]
+dev = [
+    "ipykernel>=6.29.5",
+    "ruff>=0.12.8",
+]
+
+[tool.ruff]
+include = ["*.py"]
+show-fixes = true
+line-length = 88
+indent-width = 4
+
+[tool.ruff.lint]
+select = [
+    "F", "E", "W", "I",
+    "C90", "D", "N",
+    "A", "ANN", "ARG", "B", "COM", "C4", "PT", "Q", "SIM"
+]
+ignore = ["E501", "D413"]
+
+[tool.ruff.lint.isort]
+default-section = "local-folder"
+known-third-party = [
+    "jenkins",
+    "jenkinsapi",
+    "mcp",
+    "pydantic",
+    "pydantic_settings",
+    "requests",
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+docstring-code-format = true
+docstring-code-line-length = 60
