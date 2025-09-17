@@ -18,8 +18,13 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S",
     handlers=[
         logging.StreamHandler(),
-        logging.FileHandler(log_filepath),
+        logging.FileHandler(
+            filename=log_filepath,
+            mode="a",
+            encoding="utf-8",
+        ),
     ],
+    encoding="utf-8",
 )
 
 
