@@ -28,15 +28,13 @@ class JenkinsBuildToolsRegistrar:
 
     def register(self) -> None:
         """Register all build management tools to FastMCP."""
-        self.register_stop_last_build_tool()
-        self.register_get_last_build_number_tool()
-        self.register_get_last_build_start_time_tool()
-        self.register_get_last_build_duration_tool()
-        self.register_get_last_build_status_tool()
-        self.register_get_last_build_params_tool()
-        self.register_get_last_build_console_tool()
+        self.tool_stop_last_build()
+        self.tool_get_last_build_number()
+        self.tool_get_build_information()
+        self.tool_get_build_params()
+        self.tool_get_build_console()
 
-    def register_stop_last_build_tool(self) -> None:
+    def tool_stop_last_build(self) -> None:
         """Register stop_last_build tool."""
         @mcp_tool(self.mcp)
         def stop_last_build(job_name: str) -> str:
@@ -53,7 +51,7 @@ class JenkinsBuildToolsRegistrar:
                 return f"Successfully stopped the last build for job {job_name}."
             return f"Failed to stop the last build for job {job_name}."
 
-    def register_get_last_build_number_tool(self) -> None:
+    def tool_get_last_build_number(self) -> None:
         """Register get_last_build_number tool."""
         @mcp_tool(self.mcp)
         def get_last_build_number(
@@ -72,96 +70,74 @@ class JenkinsBuildToolsRegistrar:
                 return f"Successfully retrieved last build number for job {job_name}: {num}"
             return f"Failed to retrieve last build number for job {job_name}."
 
-    def register_get_last_build_start_time_tool(self) -> None:
-        """Register get_last_build_start_time tool."""
+    def tool_get_build_information(self) -> None:
+        """Register get_build_information tool."""
         @mcp_tool(self.mcp)
-        def get_last_build_start_time(job_name: str) -> str | None:
-            """Get the last build start time of a job from the Jenkins server.
-
-            Args:
-                job_name (str): The name of the job.
-
-            Returns:
-                Message with the last build start time or failure reason.
-            """
-            local_time = JenkinsAPI().get_last_build_start_time(job_name)
-            if local_time is not None:
-                return f"Successfully retrieved last build start time for job {job_name}: {local_time}"
-            return f"Failed to retrieve last build start time for job {job_name}."
-
-    def register_get_last_build_duration_tool(self) -> None:
-        """Register get_last_build_duration tool."""
-        @mcp_tool(self.mcp)
-        def get_last_build_duration(
+        def get_build_information(
             job_name: str,
-        ) -> str:
-            """Get the last build duration of a job from the Jenkins server.
+            build_number: int = None,
+        ) -> str | None:
+            """Get the build information of a job from the Jenkins server.
 
             Args:
                 job_name (str): The name of the job.
+                build_number (int): The build number to retrieve. If None, retrieves the last build.
 
             Returns:
-                Message with the last build duration or failure reason.
+                Message with the build information or failure reason.
             """
-            duration = JenkinsAPI().get_last_build_duration(job_name)
-            if duration is not None:
-                return f"Successfully retrieved last build duration for job {job_name}: {duration} ms"
-            return f"Failed to retrieve last build duration for job {job_name}."
+            api = JenkinsAPI()
+            info = {
+                "build_number": build_number or api.get_last_build_number(job_name),
+                "start_time": api.get_build_start_time(job_name, build_number),
+                "duration": api.get_build_duration(job_name, build_number),
+                "status": api.get_build_status(job_name, build_number),
+            }
+            if info:
+                return f"Successfully retrieved build information for job {job_name}: {info}"
+            return f"Failed to retrieve build information for job {job_name}."
 
-    def register_get_last_build_status_tool(self) -> None:
-        """Register get_last_build_status tool."""
+    def tool_get_build_params(self) -> None:
+        """Register get_build_params tool."""
         @mcp_tool(self.mcp)
-        def get_last_build_status(
+        def get_build_params(
             job_name: str,
-        ) -> str:
-            """Get the last build status of a job from the Jenkins server.
+            build_number: int = None,
+        ) -> str | None:
+            """Get the build parameters of a job from the Jenkins server.
 
             Args:
                 job_name (str): The name of the job.
+                build_number (int): The build number to retrieve. If None, retrieves the last build.
 
             Returns:
-                Message with the last build status or failure reason.
+                Message with the build parameters or failure reason.
             """
-            status = JenkinsAPI().get_last_build_status(job_name)
-            if status is not None:
-                return f"Successfully retrieved last build status for job {job_name}: {status}"
-            return f"Failed to retrieve last build status for job {job_name}."
-
-    def register_get_last_build_params_tool(self) -> None:
-        """Register get_last_build_params tool."""
-        @mcp_tool(self.mcp)
-        def get_last_build_params(job_name: str) -> str | None:
-            """Get the last build parameters of a job from the Jenkins server.
-
-            Args:
-                job_name (str): The name of the job.
-
-            Returns:
-                Message with the last build parameters or failure reason.
-            """
-            build_params = JenkinsAPI().get_last_build_params(job_name)
+            build_params = JenkinsAPI().get_build_params(job_name, build_number)
             if build_params is not None:
                 return (
-                    f"Successfully retrieved last build parameters for job {job_name}: "
+                    f"Successfully retrieved build parameters for job {job_name}: "
                     f"{json.dumps(build_params, ensure_ascii=False)}"
                 )
-            return f"Failed to retrieve last build parameters for job {job_name}."
+            return f"Failed to retrieve build parameters for job {job_name}."
 
-    def register_get_last_build_console_tool(self) -> None:
-        """Register get_last_build_console tool."""
+    def tool_get_build_console(self) -> None:
+        """Register get_build_console tool."""
         @mcp_tool(self.mcp)
-        def get_last_build_console(
+        def get_build_console(
             job_name: str,
+            build_number: int = None,
         ) -> str:
-            """Get the last build console output of a job from the Jenkins server.
+            """Get the build console output of a job from the Jenkins server.
 
             Args:
                 job_name (str): The name of the job.
+                build_number (int): The build number to retrieve. If None, retrieves the last build.
 
             Returns:
-                Message with the last build console output or failure reason.
+                Message with the build console output or failure reason.
             """
-            console = JenkinsAPI().get_last_build_console(job_name)
+            console = JenkinsAPI().get_build_console(job_name, build_number)
             if console is not None:
-                return f"Successfully retrieved last build console output for job {job_name}: {console}"
-            return f"Failed to retrieve last build console output for job {job_name}."
+                return f"Successfully retrieved build console output for job {job_name}: {console}"
+            return f"Failed to retrieve build console output for job {job_name}."

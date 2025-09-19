@@ -31,18 +31,18 @@ class JenkinsJobToolsRegistrar:
 
         This method decorates and registers job-related tools.
         """
-        self.register_is_job_exists_tool()
-        self.register_is_job_queued_or_running_tool()
-        self.register_get_job_default_params_tool()
-        self.register_get_job_baseurl_tool()
-        self.register_search_job_tool()
-        self.register_create_job_tool()
-        self.register_clone_job_tool()
-        self.register_rename_job_tool()
-        self.register_delete_job_tool()
-        self.register_build_job_tool()
+        self.tool_is_job_exists()
+        self.tool_is_job_queued_or_running()
+        self.tool_get_job_default_params()
+        self.tool_get_job_baseurl()
+        self.tool_search_job()
+        self.tool_create_job()
+        self.tool_clone_job()
+        self.tool_rename_job()
+        self.tool_delete_job()
+        self.tool_build_job()
 
-    def register_is_job_exists_tool(self) -> None:
+    def tool_is_job_exists(self) -> None:
         """Register is_job_exists tool."""
         @mcp_tool(self.mcp)
         def is_job_exists(job_name: str) -> str:
@@ -59,7 +59,7 @@ class JenkinsJobToolsRegistrar:
                 return f"Job {job_name} exists."
             return f"Job {job_name} does not exist."
 
-    def register_is_job_queued_or_running_tool(self) -> None:
+    def tool_is_job_queued_or_running(self) -> None:
         """Register is_job_queued_or_running tool."""
         @mcp_tool(self.mcp)
         def is_job_queued_or_running(job_name: str) -> str:
@@ -76,7 +76,7 @@ class JenkinsJobToolsRegistrar:
                 return f"Job {job_name} is queued or running."
             return f"Job {job_name} is not queued or running."
 
-    def register_get_job_default_params_tool(self) -> None:
+    def tool_get_job_default_params(self) -> None:
         """Register get_job_default_params tool."""
         @mcp_tool(self.mcp)
         def get_job_default_params(job_name: str) -> str:
@@ -96,7 +96,7 @@ class JenkinsJobToolsRegistrar:
                 )
             return f"Failed to get default parameters for job {job_name}."
 
-    def register_get_job_baseurl_tool(self) -> None:
+    def tool_get_job_baseurl(self) -> None:
         """Register get_job_baseurl tool."""
         @mcp_tool(self.mcp)
         def get_job_baseurl(job_name: str) -> str:
@@ -113,7 +113,7 @@ class JenkinsJobToolsRegistrar:
                 return f"Job {job_name} base URL: {url}"
             return f"Failed to get base URL for job {job_name}."
 
-    def register_search_job_tool(self) -> None:
+    def tool_search_job(self) -> None:
         """Register search_job tool."""
         @mcp_tool(self.mcp)
         def search_job(
@@ -143,7 +143,7 @@ class JenkinsJobToolsRegistrar:
                 )
             return "No matching jobs found."
 
-    def register_create_job_tool(self) -> None:
+    def tool_create_job(self) -> None:
         """Register create_job tool."""
         @mcp_tool(self.mcp)
         def create_job(
@@ -164,7 +164,7 @@ class JenkinsJobToolsRegistrar:
                 return f"Successfully created job {job_name}."
             return f"Failed to create job {job_name}."
 
-    def register_clone_job_tool(self) -> None:
+    def tool_clone_job(self) -> None:
         """Register clone_job tool."""
         @mcp_tool(self.mcp)
         def clone_job(
@@ -185,7 +185,7 @@ class JenkinsJobToolsRegistrar:
                 return f"Successfully cloned job {job_name} to {new_job_name}."
             return f"Failed to clone job {job_name} to {new_job_name}."
 
-    def register_rename_job_tool(self) -> None:
+    def tool_rename_job(self) -> None:
         """Register rename_job tool."""
         @mcp_tool(self.mcp)
         def rename_job(
@@ -206,7 +206,7 @@ class JenkinsJobToolsRegistrar:
                 return f"Successfully renamed job {job_name} to {new_job_name}."
             return f"Failed to rename job {job_name} to {new_job_name}."
 
-    def register_delete_job_tool(self) -> None:
+    def tool_delete_job(self) -> None:
         """Register delete_job tool."""
         @mcp_tool(self.mcp)
         def delete_job(job_name: str) -> str:
@@ -223,7 +223,7 @@ class JenkinsJobToolsRegistrar:
                 return f"Successfully deleted job {job_name}."
             return f"Failed to delete job {job_name}."
 
-    def register_build_job_tool(self) -> None:
+    def tool_build_job(self) -> None:
         """Register build_job tool."""
         @mcp_tool(self.mcp)
         def build_job(job_name: str, params: dict = None) -> str:

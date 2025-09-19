@@ -28,13 +28,13 @@ class JenkinsViewToolsRegistrar:
 
     def register(self) -> None:
         """Register all view management tools to FastMCP."""
-        self.register_get_views_tool()
-        self.register_get_jobs_from_view_tool()
-        self.register_get_view_baseurl_tool()
-        self.register_add_job_to_view_tool()
-        self.register_remove_job_from_view_tool()
+        self.tool_get_views()
+        self.tool_get_jobs_from_view()
+        self.tool_get_view_baseurl()
+        self.tool_add_job_to_view()
+        self.tool_remove_job_from_view()
 
-    def register_get_views_tool(self) -> None:
+    def tool_get_views(self) -> None:
         """Register get_views tool."""
         @mcp_tool(self.mcp)
         def get_views() -> str:
@@ -51,7 +51,7 @@ class JenkinsViewToolsRegistrar:
                 )
             return "No views found."
 
-    def register_get_jobs_from_view_tool(self) -> None:
+    def tool_get_jobs_from_view(self) -> None:
         """Register get_jobs_from_view tool."""
         @mcp_tool(self.mcp)
         def get_jobs_from_view(view_name: str) -> str:
@@ -71,7 +71,7 @@ class JenkinsViewToolsRegistrar:
                 )
             return f"No jobs found in view {view_name}."
 
-    def register_get_view_baseurl_tool(self) -> None:
+    def tool_get_view_baseurl(self) -> None:
         """Register get_view_baseurl tool."""
         @mcp_tool(self.mcp)
         def get_view_baseurl(view_name: str) -> str:
@@ -88,7 +88,7 @@ class JenkinsViewToolsRegistrar:
                 return f"Successfully retrieved base URL for view {view_name}: {url}"
             return f"Failed to retrieve base URL for view {view_name}."
 
-    def register_add_job_to_view_tool(self) -> None:
+    def tool_add_job_to_view(self) -> None:
         """Register add_job_to_view tool."""
         @mcp_tool(self.mcp)
         def add_job_to_view(
@@ -109,7 +109,7 @@ class JenkinsViewToolsRegistrar:
                 return f"Successfully added job {job_name} to view {view_name}."
             return f"Failed to add job {job_name} to view {view_name}."
 
-    def register_remove_job_from_view_tool(self) -> None:
+    def tool_remove_job_from_view(self) -> None:
         """Register remove_job_from_view tool."""
         @mcp_tool(self.mcp)
         def remove_job_from_view(
