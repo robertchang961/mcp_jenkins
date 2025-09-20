@@ -23,6 +23,7 @@ class JenkinsSettings(BaseSettings):
         extra="ignore",    # ["allow", "ignore", "forbid"]
     )
 
+    JENKINS_BASE_URL: str
     JENKINS_USERNAME: str
     JENKINS_PASSWORD_OR_TOKEN: SecretStr
 
@@ -30,7 +31,7 @@ class JenkinsSettings(BaseSettings):
 class JenkinsServer(BaseModel):
     """Connects to Jenkins server and authenticates with username and password."""
 
-    base_url: Annotated[str, Field(default="http://10.64.101.253:8080")]
+    base_url: Annotated[str, Field(default=JenkinsSettings().JENKINS_BASE_URL)]
     username: Annotated[str, Field(default=JenkinsSettings().JENKINS_USERNAME)]
     password_or_token: Annotated[SecretStr, Field(default=JenkinsSettings().JENKINS_PASSWORD_OR_TOKEN)]
     jenkins_server: Annotated[InstanceOf[Jenkins] | None, Field(default=None)]
